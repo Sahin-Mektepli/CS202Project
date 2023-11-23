@@ -3,12 +3,14 @@ import java.io.InputStreamReader;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
-public class Customer {
+public class Customer extends User {
     static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
+    public Customer(int userId, String name, String address){
+        super(userId, name, "Customer", address);
+    }
     public static void addUser(){
         int userId;
-        int lastUserId;
+        int lastUserId; //-E- this will be fetched from the database (?)
 
         try{
             Statement stmt = DBConnection.getConnection().createStatement();

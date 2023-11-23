@@ -9,3 +9,5 @@ Use if-else and try-catch statements to handle the errors. No errors should be t
 
 23.11.23 -E-
 Dokümanı ilk berbaber okuyuşumuz ardından git reposunu oluşturdum.
+
+Sanıyorum ki bizim Customer ve Seller Entity'lerimiz zaten mevcut olan User sınıfını extend eden ayrı sınıflar olacaklar.

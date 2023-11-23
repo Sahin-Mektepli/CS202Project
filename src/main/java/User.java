@@ -26,4 +26,12 @@ public class User {
     public String getAddress() {
         return address;
     }
+
+
+    public int addCustomer(String name, String address){
+
+
+        return userId;
+    }
+
 }
