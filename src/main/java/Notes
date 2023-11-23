@@ -1,0 +1,8 @@
+Le truc dois être user-friendly.
+    Il faut donner des phrase explenatoires qui inclut les functions du truc.
+
+
+BufferReader is better than Scanner in the sense that it
+does not require the type to be consistent when reading from the user.
+
+Use if-else and try-catch statements to handle the errors. No errors should be thrown during the tests.
