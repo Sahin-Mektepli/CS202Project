@@ -1,8 +1,8 @@
 import java.sql.*;
 public class DBConnection {
-    final static String url = "jdbc:mysql://localhost:3306/cs202"; //projenin adı.
+    final static String url = "jdbc:mysql://localhost:3306/202assignment"; //projenin adı.
     final static String user = "root"; //username and password of mysql
-    final static String password = "hehehe";
+    final static String password = "im66709903";
 
 
     public static Connection getConnection(){

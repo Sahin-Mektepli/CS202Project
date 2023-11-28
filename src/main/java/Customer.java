@@ -6,7 +6,7 @@ import java.sql.Statement;
 public class Customer {
     static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-    public static void addUser(){
+    /*public static void addUser(){
         int userId;
         int lastUserId;
 
@@ -35,5 +35,5 @@ public class Customer {
         /*
         find the user first. If exists, delete; if not, show an error.
          */
-    }
+    //}
 }
