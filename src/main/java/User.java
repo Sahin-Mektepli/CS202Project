@@ -11,9 +11,9 @@ public class User {
     public final String address;
 
     static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-//deneme için yazdım bu constructoru
 
-    public User(){userId=0;name=null;type=null;address=null;};
+
+
     public User(int userId, String name, String type, String address) {
         this.userId = userId;
         this.name = name;
