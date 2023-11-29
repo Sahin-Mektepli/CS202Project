@@ -4,6 +4,7 @@ import java.io.InputStreamReader;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 public class User {
     public final int userId;
@@ -42,7 +43,7 @@ public class User {
     public static void addSeller() throws SQLException, IOException {
 //bunu denemek için yazdım databaseden veri alabiliyoruz
 
-
+        try {
         Statement stmt = DBConnection.getConnection().createStatement();
         ResultSet rs = stmt.executeQuery("select max(id) from seller");
         int lastUserId=0;
@@ -51,7 +52,7 @@ public class User {
         //System.out.println(name);
         System.out.println("Enter address: ");
         String address=br.readLine();
-        try {
+
              while ( rs.next () ) {
                  lastUserId = rs.getInt (1) ;
 
@@ -76,16 +77,18 @@ public class User {
     public static void addCustomer() throws SQLException, IOException {
 //User id yerine customer ve seller id kullanıyoruz bu verdikleri tabloya uygun değil ama bizim implemantasyonumuz böyle
 
+try {
+    Statement stmt = DBConnection.getConnection().createStatement();
+    ResultSet rs = stmt.executeQuery("select max(id) from customer");
 
-        Statement stmt = DBConnection.getConnection().createStatement();
-        ResultSet rs = stmt.executeQuery("select max(id) from customer");
+
         int lastUserId=0;
         System.out.println("Enter User Name: ");
         String name= br.readLine();
         //System.out.println(name);
         System.out.println("Enter address: ");
         String address=br.readLine();
-        try {
+
             while ( rs.next () ) {
                 lastUserId = rs.getInt (1) ;
 
@@ -105,7 +108,35 @@ public class User {
             e.printStackTrace () ;
         }
 
-    }
+    }/**
+     Soru: Payment method kart numarası mı olmalı yoksa kredi kartı, nakit,hediye kartı gibi şeyler mi olmalı???
+     Ben ikincisine göre yaptım
+     **/
+
+     public static ArrayList<String> getPaymentMethodsOfUser() throws SQLException, IOException {
+        ArrayList<String> paymentMethods=new ArrayList<>();
+         int id;
+         try{System.out.println("Enter User ID: ");
+             try {
+                  id= Integer.parseInt(br.readLine());
+             } catch (IOException e) {
+                 throw new RuntimeException(e);
+             }
+            Statement stmt = DBConnection.getConnection().createStatement();
+            ResultSet rs = stmt.executeQuery("select  payment_name from places_order, paid_with where places_order.cid="+id+" and places_order.order_id=paid_with.order_id; ");
+
+             while ( rs.next () ) {
+                paymentMethods.add(rs.getString (1) ) ;
+
+             }
+
+
+        } catch (SQLException e) {
+           e.printStackTrace();
+        }
+
+return paymentMethods;
+     }
 
 
 }

@@ -5,6 +5,9 @@ public class Main {
     public static void main (String[]args) throws SQLException, IOException {
 
         //User.addSeller();
-        User.addCustomer();
+        //User.addCustomer();
+       for (String p: User.getPaymentMethodsOfUser()){
+           System.out.println(p);
+       }
     }
 }
