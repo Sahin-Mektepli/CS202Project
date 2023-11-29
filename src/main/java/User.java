@@ -1,4 +1,5 @@
 import java.io.BufferedReader; //kina like scanner but can read anything.
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -37,21 +38,35 @@ public class User {
         return address;
     }
 
-    public void addSeller(String name,String address) throws SQLException {
+
+    public static void addSeller() throws SQLException, IOException {
 //bunu denemek için yazdım databaseden veri alabiliyoruz
 
-         // Execute a SELECT query
-        Statement stmt = DBConnection.getConnection().createStatement();
-        ResultSet rs = stmt.executeQuery("select * from seller");
 
+        Statement stmt = DBConnection.getConnection().createStatement();
+        ResultSet rs = stmt.executeQuery("select max(id) from seller");
+        int lastUserId=0;
+        System.out.println("Enter User Name: ");
+        String name= br.readLine();
+        //System.out.println(name);
+        System.out.println("Enter address: ");
+        String address=br.readLine();
         try {
              while ( rs.next () ) {
-                 int id = rs.getInt ("id") ;
-                 String contact = rs.getString ("contact_info") ;
+                 lastUserId = rs.getInt (1) ;
 
-
-                 System.out.println ("ID: " + id + ", Contact info : " + contact) ;
                  }
+             lastUserId++;
+             try{
+
+                 stmt.executeUpdate("insert into seller values ("+lastUserId+", '"+address+"' , '"+name+"')");
+                  System.out.println ("ID: " + lastUserId ) ;
+
+             }catch(SQLException e1){
+
+                 e1.printStackTrace();
+            }
+
             } catch ( SQLException e ) {
              e.printStackTrace () ;
              }
