@@ -73,5 +73,39 @@ public class User {
 
     }
 
+    public static void addCustomer() throws SQLException, IOException {
+//User id yerine customer ve seller id kullanıyoruz bu verdikleri tabloya uygun değil ama bizim implemantasyonumuz böyle
+
+
+        Statement stmt = DBConnection.getConnection().createStatement();
+        ResultSet rs = stmt.executeQuery("select max(id) from customer");
+        int lastUserId=0;
+        System.out.println("Enter User Name: ");
+        String name= br.readLine();
+        //System.out.println(name);
+        System.out.println("Enter address: ");
+        String address=br.readLine();
+        try {
+            while ( rs.next () ) {
+                lastUserId = rs.getInt (1) ;
+
+            }
+            lastUserId++;
+            try{
+
+                stmt.executeUpdate("insert into customer values ("+lastUserId+", '"+name+"' , '"+address+"')");
+                System.out.println ("ID: " + lastUserId ) ;
+
+            }catch(SQLException e1){
+
+                e1.printStackTrace();
+            }
+
+        } catch ( SQLException e ) {
+            e.printStackTrace () ;
+        }
+
+    }
+
 
 }
