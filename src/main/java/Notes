@@ -11,3 +11,9 @@ Use if-else and try-catch statements to handle the errors. No errors should be t
 Dokümanı ilk berbaber okuyuşumuz ardından git reposunu oluşturdum.
 
 Sanıyorum ki bizim Customer ve Seller Entity'lerimiz zaten mevcut olan User sınıfını extend eden ayrı sınıflar olacaklar.
+
+30.11.23 leyli
+00.56: listAllUsers'ı sadece print olarak deniyorum.
+    şimdilik rs.getString(*column index*) yazmakla getInt arasında ciddi bir fark yok gibi görünüyor
+1.23: Result Set'leri kullanarak obje oluşturmanın iyi bir yolu olmadığına, aslında sanırım fazla hızlı bir biçimde,
+ikna oldum. O yüzden ekleme yaparken objeyi de oluşturuverme fikrine dönüyoruz.

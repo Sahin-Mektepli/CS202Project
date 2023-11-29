@@ -9,6 +9,7 @@ public class Main {
        /*for (String p: User.getPaymentMethodsOfUser()){
            System.out.println(p);
        }*/
-        System.out.println(User.addRemovePaymentMethod());
+        //System.out.println(User.addRemovePaymentMethod());
+        User.listAllUsers();
     }
 }
