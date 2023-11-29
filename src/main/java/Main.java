@@ -6,8 +6,9 @@ public class Main {
 
         //User.addSeller();
         //User.addCustomer();
-       for (String p: User.getPaymentMethodsOfUser()){
+       /*for (String p: User.getPaymentMethodsOfUser()){
            System.out.println(p);
-       }
+       }*/
+        System.out.println(User.addRemovePaymentMethod());
     }
 }
