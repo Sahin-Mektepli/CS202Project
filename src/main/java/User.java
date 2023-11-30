@@ -198,7 +198,7 @@ try {
      * utanılacak şey. Query sonuçlarını, yani result set'leri, nasıl tutarlı bir biçimde objeye dönüştüreceğimi
      * anlamadığım için addSeller ve addCustomer metotlarının her çağırıldığında ekleme yaptığı bir users
      * ArrayList'i kullanarak çözdüm meseleyi. Ayıp yahu... Daha iyisini yapmak lazım.
-     * @return
+     *
      */
     public static ArrayList<User> listAllUsers(){
 
