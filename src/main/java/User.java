@@ -145,7 +145,7 @@ try {
      *
      */
     public static boolean addRemovePaymentMethod(){
-        //çalışıyor
+
          boolean success=false;
          String type = null;
         try{//sıralaması önemli
