@@ -15,6 +15,7 @@ public class User {
     static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
 
+    private static ArrayList<User> users = new ArrayList<User>();
 
     public User(int userId, String name, String type, String address) {
         this.userId = userId;
@@ -41,7 +42,7 @@ public class User {
 
 
     public static void addSeller() throws SQLException, IOException {
-//bunu denemek için yazdım databaseden veri alabiliyoruz
+
 
         try {
         Statement stmt = DBConnection.getConnection().createStatement();
@@ -56,12 +57,14 @@ public class User {
              while ( rs.next () ) {
                  lastUserId = rs.getInt (1) ;
 
+
                  }
              lastUserId++;
              try{
 
                  stmt.executeUpdate("insert into seller values ("+lastUserId+", '"+address+"' , '"+name+"')");
                   System.out.println ("ID: " + lastUserId ) ;
+                 users.add(new User(lastUserId,name,"Seller",address));
 
              }catch(SQLException e1){
 
@@ -98,6 +101,7 @@ try {
 
                 stmt.executeUpdate("insert into customer values ("+lastUserId+", '"+name+"' , '"+address+"')");
                 System.out.println ("ID: " + lastUserId ) ;
+                users.add(new User(lastUserId,name,"Customer",address));
 
             }catch(SQLException e1){
 
@@ -189,6 +193,32 @@ try {
 
         return success;
         }
+
+    /**
+     * utanılacak şey. Query sonuçlarını, yani result set'leri, nasıl tutarlı bir biçimde objeye dönüştüreceğimi
+     * anlamadığım için addSeller ve addCustomer metotlarının her çağırıldığında ekleme yaptığı bir users
+     * ArrayList'i kullanarak çözdüm meseleyi. Ayıp yahu... Daha iyisini yapmak lazım.
+     * @return
+     */
+    public static ArrayList<User> listAllUsers(){
+
+        try{
+            Statement stmt = DBConnection.getConnection().createStatement(); //bu kısım şu an yalnızca print için
+            Statement stmt2 = DBConnection.getConnection().createStatement();// pek zekice de değil açıkçası
+            ResultSet rs = stmt.executeQuery("select * from customer");
+            ResultSet rs2 = stmt2.executeQuery("select * from seller");
+            while(rs.next()){System.out.println(rs.getString(2));}
+            while(rs2.next()){System.out.println(rs2.getString(3));}
+
+
+        }
+        catch(SQLException e){
+
+        }
+
+
+        return users;
+    }
     }
 
 
