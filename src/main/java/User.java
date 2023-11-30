@@ -145,29 +145,41 @@ try {
      *
      */
     public static boolean addRemovePaymentMethod(){
+        //çalışıyor
          boolean success=false;
          String type = null;
-        try{
-        System.out.println("Type (write add or remove): ");
-        type=br.readLine();
-        System.out.println("Enter User ID: ");
-        int id= Integer.parseInt(br.readLine());
-        System.out.println("Enter Card Number: ");
-        String cardNumber=br.readLine();
+        try{//sıralaması önemli
+            System.out.println("Enter User ID: ");
+            int id= Integer.parseInt(br.readLine());
+            System.out.println("Type (write add or remove): ");
+             type=br.readLine();
 
-        if(type.equals("add")){
+            System.out.println("Enter Card Number: ");
+            String cardNumber=br.readLine();
 
-            Statement stmt = DBConnection.getConnection().createStatement();
-            stmt.executeUpdate("insert into payment_method values ("+"'"+ cardNumber +"')");
-            stmt.executeUpdate("insert into pays_with values ("+id+","+"'"+ cardNumber +"')");
+         if(type.equals("add")){
 
-            success=true;
+             Statement  stmt = DBConnection.getConnection().createStatement();
+             ResultSet rs = stmt.executeQuery("select id from customer where id= "+id);
+             if (rs.next()){//query nin sonucu varsa çalışacak
+                 stmt.executeUpdate("insert into payment_method values ("+"'"+ cardNumber +"')");
+                 stmt.executeUpdate("insert into pays_with values ("+id+","+"'"+ cardNumber +"')");
+
+                 success=true;
+             }
+
 
         } else if (type.equals("remove")) {
-//burada bir hata var
+
             Statement  stmt = DBConnection.getConnection().createStatement();
-             stmt.executeUpdate("delete from pays_with p where p.customer_id="+id+"and p.payment_name ="+"'"+cardNumber+"'");
-             stmt.executeUpdate("delete from payment_method where pname="+"'"+cardNumber+"'");
+             ResultSet rs = stmt.executeQuery("select payment_name from pays_with where customer_id="+id+" and payment_name = "+"'"+cardNumber+"'");
+             if (rs.next()){
+
+                 stmt.executeUpdate("delete from pays_with p where p.customer_id="+id+" and p.payment_name = "+"'"+cardNumber+"'");
+                 stmt.executeUpdate("delete from payment_method where pname= "+"'"+cardNumber+"'");
+                 success=true;
+             }
+
 
 
         }
