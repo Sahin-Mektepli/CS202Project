@@ -15,7 +15,7 @@ public class User {
     static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
 
-    private static ArrayList<User> users = new ArrayList<User>();
+   // private static ArrayList<User> users = new ArrayList<User>();
 
     public User(int userId, String name, String type, String address) {
         this.userId = userId;
@@ -64,7 +64,7 @@ public class User {
 
                  stmt.executeUpdate("insert into seller values ("+lastUserId+", '"+address+"' , '"+name+"')");
                   System.out.println ("ID: " + lastUserId ) ;
-                 users.add(new User(lastUserId,name,"Seller",address));
+                // users.add(new User(lastUserId,name,"Seller",address));
 
              }catch(SQLException e1){
 
@@ -101,7 +101,7 @@ try {
 
                 stmt.executeUpdate("insert into customer values ("+lastUserId+", '"+name+"' , '"+address+"')");
                 System.out.println ("ID: " + lastUserId ) ;
-                users.add(new User(lastUserId,name,"Customer",address));
+                //users.add(new User(lastUserId,name,"Customer",address));
 
             }catch(SQLException e1){
 
@@ -202,18 +202,27 @@ try {
      */
     public static ArrayList<User> listAllUsers(){
 
+        ArrayList<User> users=new ArrayList<>();
         try{
             Statement stmt = DBConnection.getConnection().createStatement(); //bu kısım şu an yalnızca print için
             Statement stmt2 = DBConnection.getConnection().createStatement();// pek zekice de değil açıkçası
             ResultSet rs = stmt.executeQuery("select * from customer");
             ResultSet rs2 = stmt2.executeQuery("select * from seller");
-            while(rs.next()){System.out.println(rs.getString(2));}
-            while(rs2.next()){System.out.println(rs2.getString(3));}
+            while(rs.next()){
+                User user=new User(rs.getInt(1),rs.getString(2),"Customer",rs.getString(3));
+                users.add(user);
+
+            }
+            while(rs2.next()){
+                User user=new User(rs2.getInt(1),rs2.getString(3),"Seller",rs2.getString(2));
+                users.add(user);
+            }
 
 
         }
         catch(SQLException e){
 
+            e.printStackTrace();
         }
 
 
