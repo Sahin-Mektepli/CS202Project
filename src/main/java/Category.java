@@ -21,7 +21,7 @@ public class Category {
         return name;
     }
 
-    public static ArrayList<Category> listCategories(){
+    public static ArrayList<Category> listCategories(){// Buna gerek var mı
         ArrayList<Category> categories = new ArrayList<>();
         try {
             Statement stmt = DBConnection.getConnection().createStatement();
