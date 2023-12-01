@@ -11,9 +11,12 @@ public class Main {
        }*/
        // System.out.println(User.addRemovePaymentMethod());
 
-        for(User u :User.listAllUsers()){
+       /* for(User u :User.listAllUsers()){
             System.out.println(u.getUserId()+" ,"+u.getName()+" ,"+u.type+" ,"+u.getAddress());
-        }
+        }*/
+        for( Category c :Category.getCategories()) {
+            System.out.println(c.getCategoryId() + " ," + c.getName() );
 
+        }
     }
 }
