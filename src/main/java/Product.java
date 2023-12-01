@@ -36,12 +36,11 @@ public class Product {
 
 
 
-    public static boolean removeProduct(){
+    public static boolean removeProduct(int id){
         boolean s = false;
 
         try{
-            System.out.println("Enter Product ID: ");
-            int id= Integer.parseInt(br.readLine());
+
 
             Statement  stmt = DBConnection.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery("select id from product where id="+id);
@@ -56,20 +55,19 @@ public class Product {
 
 
 
-        } catch (IOException | SQLException e) {
+        } catch ( SQLException e) {
             e.printStackTrace();
         }
 
 
     return s;}
 
-    public static int addProduct() throws SQLException, IOException {
+    public static int addProduct(String name,String description,String categoryId) throws SQLException, IOException {//!!! category id ve category description da eklenmeli database güncellenmeli
         try{
             Statement stmt = DBConnection.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery("select max(id) from product");
             int lastProductId = 0;
-            System.out.println("Enter product name");
-            String name = br.readLine();
+
             while (rs.next()){lastProductId = rs.getInt(1);}
             lastProductId++;
             try{
