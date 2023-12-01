@@ -87,7 +87,7 @@ public class User {
 
                 stmt.executeUpdate("insert into customer values ("+lastUserId+", '"+name+"' , '"+address+"')");
                 System.out.println ("ID: " + lastUserId ) ;
-                //users.add(new User(lastUserId,name,"Customer",address));
+
                 return lastUserId;
             }catch(SQLException e1){
 

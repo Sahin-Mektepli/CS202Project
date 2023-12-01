@@ -18,6 +18,8 @@ public class Main {
             System.out.println(c.getCategoryId() + " ," + c.getName() );
 
         }*/
-        System.out.println(Product.removeProduct());
+        //System.out.println(Product.removeProduct());
+        System.out.println(Listing.createListing(3,1,40,1));
+
     }
 }
