@@ -41,15 +41,12 @@ public class User {
     }
 
 
-    public static int addSeller() throws SQLException, IOException {
+    public static int addSeller(String name,String address) throws SQLException, IOException {
         try {
             Statement stmt = DBConnection.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery("select max(id) from seller");
             int lastUserId=0;
-            System.out.println("Enter User Name: ");
-            String name= br.readLine();
-            System.out.println("Enter address: ");
-            String address=br.readLine();
+
 
             while ( rs.next () ) {
                 lastUserId = rs.getInt (1) ;
@@ -70,7 +67,7 @@ public class User {
         return -1; //something went wrong.
     }
 
-    public static int addCustomer() throws SQLException, IOException {
+    public static int addCustomer(String name,String address) throws SQLException, IOException {
 //User id yerine customer ve seller id kullanıyoruz bu verdikleri tabloya uygun değil ama bizim implemantasyonumuz böyle
 
         try {
@@ -79,10 +76,7 @@ public class User {
 
 
             int lastUserId=0;
-            System.out.println("Enter User Name: ");
-            String name= br.readLine();
-            System.out.println("Enter address: ");
-            String address=br.readLine();
+
 
             while ( rs.next () ) {
                 lastUserId = rs.getInt (1) ;
@@ -111,15 +105,10 @@ public class User {
      yeni bir tablo oluşturdum müşterilerin ödeme yöntemlerini içinde tutuyor galiba doğrusu böyle olmalı ödeme yaparken kayıtlı yöntemlerden birini kullanmış oluyor böylece
      **/
 
-    public static ArrayList<String> getPaymentMethodsOfUser() throws SQLException, IOException {
+    public static ArrayList<String> getPaymentMethodsOfUser(int id) throws SQLException, IOException {
         ArrayList<String> paymentMethods=new ArrayList<>();
-        int id;
-        try{System.out.println("Enter User ID: ");
-            try {
-                id= Integer.parseInt(br.readLine());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+
+        try{
             Statement stmt = DBConnection.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery("select  payment_name from pays_with where pays_with.customer_id="+id +";");
 
@@ -141,18 +130,11 @@ public class User {
      * ufak bir sorunumuz var burada seller_id ve customer_id aynı olabiliyor ve bu bir sıkıntı bence buna baklım bir daha
      *
      */
-    public static boolean addRemovePaymentMethod(){
+    public static boolean addRemovePaymentMethod(int id,String type,String cardNumber){
 
         boolean success=false;
-        String type = null;
-        try{//sıralaması önemli
-            System.out.println("Enter User ID: ");
-            int id= Integer.parseInt(br.readLine());
-            System.out.println("Type (write add or remove): ");
-            type=br.readLine();
 
-            System.out.println("Enter Card Number: ");
-            String cardNumber=br.readLine();
+        try{
 
             if(type.equals("add")){
 
@@ -180,7 +162,7 @@ public class User {
 
 
             }
-        } catch (IOException|SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
