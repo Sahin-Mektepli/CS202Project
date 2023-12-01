@@ -79,4 +79,25 @@ public class Listing {
 
         return lastUserId;
     }
+
+    public static Listing getListing(int listingId){
+        Listing listing=null;
+        try{
+            Statement stmt = DBConnection.getConnection().createStatement();
+            ResultSet rs = stmt.executeQuery("select * from listing where listing_id= "+listingId);
+            while ( rs.next () ) {
+                int productId = rs.getInt (2) ;
+                int sellerId = rs.getInt (3) ;
+                int stock = rs.getInt (4) ;
+                int price = rs.getInt (5) ;
+                listing=new Listing(listingId,sellerId, productId,price,stock);
+            }
+
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return listing;
+    }
 }

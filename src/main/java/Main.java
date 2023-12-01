@@ -19,7 +19,8 @@ public class Main {
 
         }*/
         //System.out.println(Product.removeProduct());
-        System.out.println(Listing.createListing(3,1,40,1));
+       // System.out.println(Listing.createListing(3,1,40,1));
+        //System.out.println(Listing.getListing(1).price);
 
     }
 }
