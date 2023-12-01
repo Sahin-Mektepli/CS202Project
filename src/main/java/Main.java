@@ -14,9 +14,10 @@ public class Main {
        /* for(User u :User.listAllUsers()){
             System.out.println(u.getUserId()+" ,"+u.getName()+" ,"+u.type+" ,"+u.getAddress());
         }*/
-        for( Category c :Category.getCategories()) {
+        /*for( Category c :Category.getCategories()) {
             System.out.println(c.getCategoryId() + " ," + c.getName() );
 
-        }
+        }*/
+        System.out.println(Product.removeProduct());
     }
 }
