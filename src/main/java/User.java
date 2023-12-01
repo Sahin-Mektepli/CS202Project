@@ -12,10 +12,10 @@ public class User {
     public final String type;
     public final String address;
 
-    static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
 
-   // private static ArrayList<User> users = new ArrayList<User>();
+    // private static ArrayList<User> users = new ArrayList<User>();
 
     public User(int userId, String name, String type, String address) {
         this.userId = userId;
@@ -41,56 +41,48 @@ public class User {
     }
 
 
-    public static void addSeller() throws SQLException, IOException {
-
-
+    public static int addSeller() throws SQLException, IOException {
         try {
-        Statement stmt = DBConnection.getConnection().createStatement();
-        ResultSet rs = stmt.executeQuery("select max(id) from seller");
-        int lastUserId=0;
-        System.out.println("Enter User Name: ");
-        String name= br.readLine();
-        //System.out.println(name);
-        System.out.println("Enter address: ");
-        String address=br.readLine();
+            Statement stmt = DBConnection.getConnection().createStatement();
+            ResultSet rs = stmt.executeQuery("select max(id) from seller");
+            int lastUserId=0;
+            System.out.println("Enter User Name: ");
+            String name= br.readLine();
+            System.out.println("Enter address: ");
+            String address=br.readLine();
 
-             while ( rs.next () ) {
-                 lastUserId = rs.getInt (1) ;
-
-
-                 }
-             lastUserId++;
-             try{
-
-                 stmt.executeUpdate("insert into seller values ("+lastUserId+", '"+address+"' , '"+name+"')");
-                  System.out.println ("ID: " + lastUserId ) ;
-                // users.add(new User(lastUserId,name,"Seller",address));
-
-             }catch(SQLException e1){
-
-                 e1.printStackTrace();
+            while ( rs.next () ) {
+                lastUserId = rs.getInt (1) ;
             }
+            lastUserId++;
+            try{
 
-            } catch ( SQLException e ) {
-             e.printStackTrace () ;
-             }
+                stmt.executeUpdate("insert into seller values ("+lastUserId+", '"+address+"' , '"+name+"')");
+                System.out.println ("ID: " + lastUserId ) ;
+                // users.add(new User(lastUserId,name,"Seller",address));
+                return lastUserId;
 
+            }catch(SQLException e1){e1.printStackTrace();}
+
+        } catch ( SQLException e ) {
+            e.printStackTrace () ;
+        }
+        return -1; //something went wrong.
     }
 
-    public static void addCustomer() throws SQLException, IOException {
+    public static int addCustomer() throws SQLException, IOException {
 //User id yerine customer ve seller id kullanıyoruz bu verdikleri tabloya uygun değil ama bizim implemantasyonumuz böyle
 
-try {
-    Statement stmt = DBConnection.getConnection().createStatement();
-    ResultSet rs = stmt.executeQuery("select max(id) from customer");
+        try {
+            Statement stmt = DBConnection.getConnection().createStatement();
+            ResultSet rs = stmt.executeQuery("select max(id) from customer");
 
 
-        int lastUserId=0;
-        System.out.println("Enter User Name: ");
-        String name= br.readLine();
-        //System.out.println(name);
-        System.out.println("Enter address: ");
-        String address=br.readLine();
+            int lastUserId=0;
+            System.out.println("Enter User Name: ");
+            String name= br.readLine();
+            System.out.println("Enter address: ");
+            String address=br.readLine();
 
             while ( rs.next () ) {
                 lastUserId = rs.getInt (1) ;
@@ -102,7 +94,7 @@ try {
                 stmt.executeUpdate("insert into customer values ("+lastUserId+", '"+name+"' , '"+address+"')");
                 System.out.println ("ID: " + lastUserId ) ;
                 //users.add(new User(lastUserId,name,"Customer",address));
-
+                return lastUserId;
             }catch(SQLException e1){
 
                 e1.printStackTrace();
@@ -111,37 +103,38 @@ try {
         } catch ( SQLException e ) {
             e.printStackTrace () ;
         }
-
-    }/**
+        return -1; //something went wrong
+    }
+    /**
      Soru: Payment method kart numarası mı olmalı yoksa kredi kartı, nakit,hediye kartı gibi şeyler mi olmalı???
      Ben ikincisine göre yaptım ama ikisi için de çalışır bu metod sorunun cevabına göre tabloyu güncellememiz gerekiyor
      yeni bir tablo oluşturdum müşterilerin ödeme yöntemlerini içinde tutuyor galiba doğrusu böyle olmalı ödeme yaparken kayıtlı yöntemlerden birini kullanmış oluyor böylece
      **/
 
-     public static ArrayList<String> getPaymentMethodsOfUser() throws SQLException, IOException {
+    public static ArrayList<String> getPaymentMethodsOfUser() throws SQLException, IOException {
         ArrayList<String> paymentMethods=new ArrayList<>();
-         int id;
-         try{System.out.println("Enter User ID: ");
-             try {
-                  id= Integer.parseInt(br.readLine());
-             } catch (IOException e) {
-                 throw new RuntimeException(e);
-             }
+        int id;
+        try{System.out.println("Enter User ID: ");
+            try {
+                id= Integer.parseInt(br.readLine());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             Statement stmt = DBConnection.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery("select  payment_name from pays_with where pays_with.customer_id="+id +";");
 
-             while ( rs.next () ) {
+            while ( rs.next () ) {
                 paymentMethods.add(rs.getString (1) ) ;
 
-             }
+            }
 
 
         } catch (SQLException e) {
-           e.printStackTrace();
+            e.printStackTrace();
         }
 
-    return paymentMethods;
-     }
+        return paymentMethods;
+    }
 
     /**
      * yeni eklediğim pays_with tablosunu kullanacağım burada
@@ -150,49 +143,49 @@ try {
      */
     public static boolean addRemovePaymentMethod(){
 
-         boolean success=false;
-         String type = null;
+        boolean success=false;
+        String type = null;
         try{//sıralaması önemli
             System.out.println("Enter User ID: ");
             int id= Integer.parseInt(br.readLine());
             System.out.println("Type (write add or remove): ");
-             type=br.readLine();
+            type=br.readLine();
 
             System.out.println("Enter Card Number: ");
             String cardNumber=br.readLine();
 
-         if(type.equals("add")){
+            if(type.equals("add")){
 
-             Statement  stmt = DBConnection.getConnection().createStatement();
-             ResultSet rs = stmt.executeQuery("select id from customer where id= "+id);
-             if (rs.next()){//query nin sonucu varsa çalışacak
-                 stmt.executeUpdate("insert into payment_method values ("+"'"+ cardNumber +"')");
-                 stmt.executeUpdate("insert into pays_with values ("+id+","+"'"+ cardNumber +"')");
+                Statement  stmt = DBConnection.getConnection().createStatement();
+                ResultSet rs = stmt.executeQuery("select id from customer where id= "+id);
+                if (rs.next()){//query nin sonucu varsa çalışacak
+                    stmt.executeUpdate("insert into payment_method values ("+"'"+ cardNumber +"')");
+                    stmt.executeUpdate("insert into pays_with values ("+id+","+"'"+ cardNumber +"')");
 
-                 success=true;
-             }
-
-
-        } else if (type.equals("remove")) {
-
-            Statement  stmt = DBConnection.getConnection().createStatement();
-             ResultSet rs = stmt.executeQuery("select payment_name from pays_with where customer_id="+id+" and payment_name = "+"'"+cardNumber+"'");
-             if (rs.next()){
-
-                 stmt.executeUpdate("delete from pays_with p where p.customer_id="+id+" and p.payment_name = "+"'"+cardNumber+"'");
-                 stmt.executeUpdate("delete from payment_method where pname= "+"'"+cardNumber+"'");
-                 success=true;
-             }
+                    success=true;
+                }
 
 
+            } else if (type.equals("remove")) {
 
-        }
+                Statement  stmt = DBConnection.getConnection().createStatement();
+                ResultSet rs = stmt.executeQuery("select payment_name from pays_with where customer_id="+id+" and payment_name = "+"'"+cardNumber+"'");
+                if (rs.next()){
+
+                    stmt.executeUpdate("delete from pays_with p where p.customer_id="+id+" and p.payment_name = "+"'"+cardNumber+"'");
+                    stmt.executeUpdate("delete from payment_method where pname= "+"'"+cardNumber+"'");
+                    success=true;
+                }
+
+
+
+            }
         } catch (IOException|SQLException e) {
-        e.printStackTrace();
-    }
+            e.printStackTrace();
+        }
 
         return success;
-        }
+    }
 
 
     public static ArrayList<User> listAllUsers(){
@@ -223,8 +216,11 @@ try {
 
         return users;
     }
-    }
 
+
+
+
+}
 
 
 
