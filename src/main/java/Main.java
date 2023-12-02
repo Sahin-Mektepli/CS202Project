@@ -161,16 +161,38 @@ public class Main {
 
 
 
-    //Statictics
-    public ArrayList<User> listTopKSellers(int k){
+    //Statictics başlangıç
+    public static ArrayList<User> listTopKSellers(int k){
         ArrayList<User> topSellers=new ArrayList<>();
+
+
+        try{
+            Statement stmt = DBConnection.getConnection().createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT seller.id  seller_id, SUM(listing.price) AS ordered_revenue, seller.seller_name,seller.contact_info\n" +
+                    "FROM seller , orders, listing\n" +
+                    "where seller.id = listing.seller_id and orders.listing_id = listing.listing_id\n" +
+                    "GROUP BY seller.id\n" +
+                    "ORDER BY ordered_revenue DESC;\n");
+
+            int count=0;
+            while ( rs.next () && count<k) {
+             User seller=new User (rs.getInt (1) ,rs.getString(3),"Seller",rs.getString(4)) ;
+             topSellers.add(seller);
+
+            }
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
         return topSellers;
     }
 
-    //Statistics
+    //Statistics bitiş
     public static void main (String[]args) throws SQLException, IOException {
 
+        System.out.println(listTopKSellers(2).get(0).getUserId());
 
 
     }
