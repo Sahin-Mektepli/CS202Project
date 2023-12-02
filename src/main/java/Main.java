@@ -207,10 +207,35 @@ public class Main {
         return stock;
     }
 
+    public static ArrayList<CategoryStats> getAveragePricePerCategory(){
+        ArrayList<CategoryStats> categoryStats=new ArrayList<>();
+        try{
+            Statement stmt = DBConnection.getConnection().createStatement();
+            ResultSet rs = stmt.executeQuery("select p.category_id, avg(listing.price) as averagePrice from product p, listing\n" +
+                    "where listing.product_id = p.id\n" +
+                    "group by p.category_id;");
+
+            while ( rs.next () ) {
+                CategoryStats s=new CategoryStats(rs.getInt(1),rs.getDouble(2));
+                categoryStats.add(s);
+
+            }
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return categoryStats;
+    }
+
     //Statistics bitiş
     public static void main (String[]args) throws SQLException, IOException {
 
-        System.out.println(numberOfOutOfStock());
+        //System.out.println(numberOfOutOfStock());
+        for (CategoryStats c:getAveragePricePerCategory()){
+            System.out.println(c.categoryId+", "+c.averagePrice);
+        }
+
 
 
     }
