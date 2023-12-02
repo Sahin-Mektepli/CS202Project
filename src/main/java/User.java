@@ -12,7 +12,7 @@ public class User {
     public final String type;
     public final String address;
 
-    private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
 
 
     // private static ArrayList<User> users = new ArrayList<User>();
@@ -41,7 +41,7 @@ public class User {
     }
 
 
-    public static int addSeller(String name,String address) throws SQLException, IOException {
+  /*  public static int addSeller(String name,String address) throws SQLException, IOException {
         try {
             Statement stmt = DBConnection.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery("select max(id) from seller");
@@ -105,7 +105,7 @@ public class User {
      yeni bir tablo oluşturdum müşterilerin ödeme yöntemlerini içinde tutuyor galiba doğrusu böyle olmalı ödeme yaparken kayıtlı yöntemlerden birini kullanmış oluyor böylece
      **/
 
-    public static ArrayList<String> getPaymentMethodsOfUser(int id) throws SQLException, IOException {
+  /*  public static ArrayList<String> getPaymentMethodsOfUser(int id) throws SQLException, IOException {
         ArrayList<String> paymentMethods=new ArrayList<>();
 
         try{
@@ -130,7 +130,7 @@ public class User {
      * ufak bir sorunumuz var burada seller_id ve customer_id aynı olabiliyor ve bu bir sıkıntı bence buna baklım bir daha
      *
      */
-    public static boolean addRemovePaymentMethod(int id,String type,String cardNumber){
+   /* public static boolean addRemovePaymentMethod(int id,String type,String cardNumber){
 
         boolean success=false;
 
@@ -197,7 +197,7 @@ public class User {
 
 
         return users;
-    }
+    }*/
 
 
 
