@@ -189,10 +189,28 @@ public class Main {
         return topSellers;
     }
 
+    public static int numberOfOutOfStock(){
+        int stock=0;
+        try{
+            Statement stmt = DBConnection.getConnection().createStatement();
+            ResultSet rs = stmt.executeQuery("select count(*) from listing where stock = 0;");
+
+            while ( rs.next () ) {
+              stock= rs.getInt (1) ;
+
+            }
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return stock;
+    }
+
     //Statistics bitiş
     public static void main (String[]args) throws SQLException, IOException {
 
-        System.out.println(listTopKSellers(2).get(0).getUserId());
+        System.out.println(numberOfOutOfStock());
 
 
     }
