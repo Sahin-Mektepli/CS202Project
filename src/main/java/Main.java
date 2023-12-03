@@ -232,9 +232,10 @@ public class Main {
     public static void main (String[]args) throws SQLException, IOException {
 
         //System.out.println(numberOfOutOfStock());
-        for (CategoryStats c:getAveragePricePerCategory()){
-            System.out.println(c.categoryId+", "+c.averagePrice);
-        }
+        //for (CategoryStats c:getAveragePricePerCategory()){System.out.println(c.categoryId+", "+c.averagePrice);}
+
+        System.out.println(Category.addRemoveCategory("oyuncak","remove"));
+
 
 
 
