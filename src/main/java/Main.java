@@ -249,6 +249,18 @@ public class Main {
         return users;
     }
 
+    public static Product topSellingProduct(){
+        try{
+            Statement stmt = DBConnection.getConnection().createStatement();
+            ResultSet rs = stmt.executeQuery("select count(*), p.id, p.pname from listing l, orders o, product p where l.listing_id=o.listing_id and p.id=l.product_id group by product_id order by count(*) desc;");
+            if(rs.next())
+                return new Product(rs.getInt(2),rs.getString(3));
+            else
+                System.out.println("There seems to be no product that's being sold...");
+        }
+        catch (SQLException e){e.printStackTrace();}
+        return null;
+    }
 
 
     public static void main (String[]args) throws SQLException, IOException {
@@ -256,13 +268,8 @@ public class Main {
         //System.out.println(numberOfOutOfStock());
         //for (CategoryStats c:getAveragePricePerCategory()){System.out.println(c.categoryId+", "+c.averagePrice);}
 
-        for (User u :
-                topSpentK(2)) {
-            System.out.println(u.getUserId());
-            System.out.println(u.getName());
-            System.out.println(u.getAddress());
-            System.out.println(u.getType());
-        }
+        System.out.println(topSellingProduct().getProductId());
+        System.out.println(topSellingProduct().getName());
 
 
 
