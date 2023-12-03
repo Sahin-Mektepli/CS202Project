@@ -1,6 +1,9 @@
+import javax.swing.plaf.nimbus.State;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Listing {
     public final int listingId;
@@ -92,12 +95,22 @@ public class Listing {
                 int price = rs.getInt (5) ;
                 listing=new Listing(listingId,sellerId, productId,price,stock);
             }
-
-
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return listing;
+    }
+    public static ArrayList<Listing> getListingsOfSeller(int sellerId){
+        ArrayList<Listing> listings = new ArrayList<>();
+        try{
+            Statement stmt = DBConnection.getConnection().createStatement();
+            ResultSet rs = stmt.executeQuery("select * from listing where seller_id="+sellerId);
+
+            while(rs.next()){
+                listings.add(new Listing(rs.getInt(1),rs.getInt(3),rs.getInt(2), rs.getInt(5),rs.getInt(4)));
+            }
+        }
+        catch (SQLException e){e.printStackTrace();}
+        return listings;
     }
 }

@@ -234,7 +234,10 @@ public class Main {
         //System.out.println(numberOfOutOfStock());
         //for (CategoryStats c:getAveragePricePerCategory()){System.out.println(c.categoryId+", "+c.averagePrice);}
 
-        System.out.println(Category.addRemoveCategory("oyuncak","remove"));
+        for (Listing l :
+                Listing.getListingsOfSeller(2)) {
+            System.out.println(l.getListingId()+" , "+l.getProductId()+" , "+l.getSellerId()+" , "+l.getStock()+" , "+l.getPrice());
+        }
 
 
 
