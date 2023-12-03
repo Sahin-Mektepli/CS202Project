@@ -276,15 +276,28 @@ public class Main {
         return products;
     }
 
+    public static ArrayList<Order> getOrdersOfUser(int userId){
+        ArrayList<Order> orders = new ArrayList<>();
+        try{
+            Statement stmt = DBConnection.getConnection().createStatement();
+            ResultSet rs = stmt.executeQuery("select o.id, o.listing_id, o.user_id, o.dates from orders o, customer c where o.user_id=c.id and c.id="+userId);
+            while(rs.next()){
+                orders.add(new Order(rs.getInt(1),rs.getInt(2),rs.getInt(3),rs.getDate(4)));}
+        }catch(SQLException e){e.printStackTrace();}
+
+        return orders;
+    }
     public static void main (String[]args) throws SQLException, IOException {
 
         //System.out.println(numberOfOutOfStock());
         //for (CategoryStats c:getAveragePricePerCategory()){System.out.println(c.categoryId+", "+c.averagePrice);}
 
-        for (Product p :
-                getKTopSellingProductofSeller(1, 1)) {
-            System.out.print(p.getProductId()+" ");
-            System.out.println(p.getName());
+        for (Order p :
+                getOrdersOfUser(10)) {
+            System.out.print(p.getOrderId()+" ");
+            System.out.print(p.getListingId()+" ");
+            System.out.print(p.getUserId()+" ");
+            System.out.println(p.getDate());
         }
 
 
