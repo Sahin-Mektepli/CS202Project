@@ -1,3 +1,4 @@
+import javax.xml.transform.Result;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -287,20 +288,45 @@ public class Main {
 
         return orders;
     }
+
+    public static boolean buy(int listingId, int userId){
+        try {
+            Statement stmt = DBConnection.getConnection().createStatement();
+            //if the stock in the listing is non-positive, return false:
+            ResultSet rs = stmt.executeQuery("select stock,product_id from listing where listing_id="+listingId);
+            if(rs.next()){
+                int stock = rs.getInt(1);
+                if(stock>0){ //nah, we have it. place an order than!
+                    ResultSet rs2 = stmt.executeQuery("select max(id) from orders");
+                    if(rs2.next()) {
+                        int orderId = rs2.getInt(1) + 1;
+                        stmt.executeUpdate("insert into orders values("+orderId + "," + listingId + "," + userId + ",current_date())"); //adding the order with given listingId
+                        stmt.executeUpdate("update listing set stock="+(stock-1)+" where listing_id="+listingId);
+                        return true;
+                    }
+                }
+                else{ //the stock is non-positive!
+                    return false;
+                }
+            }
+            else{
+                System.out.println("Provided listingId does not correspond to an existing listing");
+            }
+
+        }
+        catch (SQLException e){e.printStackTrace();}
+        return false;
+    }
     public static void main (String[]args) throws SQLException, IOException {
 
         //System.out.println(numberOfOutOfStock());
         //for (CategoryStats c:getAveragePricePerCategory()){System.out.println(c.categoryId+", "+c.averagePrice);}
 
-        for (Order p :
-                getOrdersOfUser(10)) {
-            System.out.print(p.getOrderId()+" ");
-            System.out.print(p.getListingId()+" ");
-            System.out.print(p.getUserId()+" ");
-            System.out.println(p.getDate());
-        }
-
-
-
+        System.out.println(buy(6,246));
+        int orderId=10;
+        int listingId=84;
+        int userId = 15;
+        int stock = 10;
+        //System.out.println("update listing set stock="+(stock-1)+" where listing_id="+listingId);
     }
 }
