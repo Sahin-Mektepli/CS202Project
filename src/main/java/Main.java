@@ -262,14 +262,30 @@ public class Main {
         return null;
     }
 
+    public static ArrayList<Product> getKTopSellingProductofSeller(int k, int userId){
+        ArrayList<Product> products = new ArrayList<>();
+        try{
+            Statement stmt = DBConnection.getConnection().createStatement();
+            ResultSet rs = stmt.executeQuery("select count(product_id), seller_id,product_id,p.pname from listing l, orders o, product p, seller s where l.listing_id=o.listing_id and p.id=l.product_id and l.seller_id=s.id AND seller_id="+userId+" group by product_id, seller_id order by count(*) desc;");
+            while(rs.next() && products.size()<k){
+                products.add(new Product(rs.getInt(3),rs.getString(4)));
+            }
+        }catch(SQLException e){e.printStackTrace();}
+
+
+        return products;
+    }
 
     public static void main (String[]args) throws SQLException, IOException {
 
         //System.out.println(numberOfOutOfStock());
         //for (CategoryStats c:getAveragePricePerCategory()){System.out.println(c.categoryId+", "+c.averagePrice);}
 
-        System.out.println(topSellingProduct().getProductId());
-        System.out.println(topSellingProduct().getName());
+        for (Product p :
+                getKTopSellingProductofSeller(1, 1)) {
+            System.out.print(p.getProductId()+" ");
+            System.out.println(p.getName());
+        }
 
 
 
