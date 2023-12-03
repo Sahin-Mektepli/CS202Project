@@ -229,16 +229,40 @@ public class Main {
     }
 
     //Statistics bitiş
+    //yıo, daha yeni başladık:
+
+    /**
+     * Yazdığım query'yi beğenmedim. Fakat çalışıyor olmalı.
+     * @param k kaç tane kullanıcı verdiği
+     * @return en fazla alım yapmış alıcılar
+     */
+    public static ArrayList<User> topSpentK(int k){
+        ArrayList<User> users = new ArrayList<>();
+        try {
+            Statement stmt = DBConnection.getConnection().createStatement();
+            ResultSet rs = stmt.executeQuery("select sum(l.price),c.id,c.username,c.customer_address from customer as c, orders as o, listing as l where c.id=o.user_id and l.listing_id=o.listing_id group by c.id,c.customer_address,c.id, c.username, c.customer_address order by sum(l.price) desc");
+            while(rs.next() && users.size()<k){
+                users.add(new User(rs.getInt(2),rs.getString(3),"Customer",rs.getString(4)));
+            }
+        }
+        catch(SQLException e){e.printStackTrace();}
+        return users;
+    }
+
+
+
     public static void main (String[]args) throws SQLException, IOException {
 
         //System.out.println(numberOfOutOfStock());
         //for (CategoryStats c:getAveragePricePerCategory()){System.out.println(c.categoryId+", "+c.averagePrice);}
 
-        for (Listing l :
-                Listing.getListingsOfSeller(2)) {
-            System.out.println(l.getListingId()+" , "+l.getProductId()+" , "+l.getSellerId()+" , "+l.getStock()+" , "+l.getPrice());
+        for (User u :
+                topSpentK(2)) {
+            System.out.println(u.getUserId());
+            System.out.println(u.getName());
+            System.out.println(u.getAddress());
+            System.out.println(u.getType());
         }
-
 
 
 
