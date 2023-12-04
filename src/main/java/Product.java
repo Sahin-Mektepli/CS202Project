@@ -36,7 +36,7 @@ public class Product {
 
 
 
-    public static boolean removeProduct(int id){
+   /* public static boolean removeProduct(int id){
         boolean s = false;
 
         try{
@@ -90,5 +90,5 @@ public class Product {
         } catch (SQLException e){e.printStackTrace();}
         return products;
 
-    }
+    }*/
 }

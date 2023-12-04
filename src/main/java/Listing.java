@@ -40,7 +40,7 @@ public class Listing {
         return stock;
     }
 
-    public static int createListing(int productId,int sellerId,int price,int stock){
+  /*  public static int createListing(int productId,int sellerId,int price,int stock){
         int lastUserId=-1;
         try{
             Statement stmt = DBConnection.getConnection().createStatement();
@@ -112,5 +112,5 @@ public class Listing {
         }
         catch (SQLException e){e.printStackTrace();}
         return listings;
-    }
+    }*/
 }

@@ -8,22 +8,18 @@ import java.util.ArrayList;
 public class Main {
 
     //USER Başlangıç
-    public static int addSeller(String name,String address) throws SQLException, IOException {
+    public int addSeller(String name,String address)  {
         try {
             Statement stmt = DBConnection.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery("select max(id) from seller");
             int lastUserId=0;
-
 
             while ( rs.next () ) {
                 lastUserId = rs.getInt (1) ;
             }
             lastUserId++;
             try{
-
                 stmt.executeUpdate("insert into seller values ("+lastUserId+", '"+address+"' , '"+name+"')");
-                System.out.println ("ID: " + lastUserId ) ;
-                // users.add(new User(lastUserId,name,"Seller",address));
                 return lastUserId;
 
             }catch(SQLException e1){e1.printStackTrace();}
@@ -34,7 +30,7 @@ public class Main {
         return -1; //something went wrong.
     }
 
-    public static int addCustomer(String name,String address) throws SQLException, IOException {
+    public  int addCustomer(String name,String address) {
 //User id yerine customer ve seller id kullanıyoruz bu verdikleri tabloya uygun değil ama bizim implemantasyonumuz böyle
 
         try {
@@ -44,7 +40,6 @@ public class Main {
 
             int lastUserId=0;
 
-
             while ( rs.next () ) {
                 lastUserId = rs.getInt (1) ;
 
@@ -53,7 +48,7 @@ public class Main {
             try{
 
                 stmt.executeUpdate("insert into customer values ("+lastUserId+", '"+name+"' , '"+address+"')");
-                System.out.println ("ID: " + lastUserId ) ;
+
 
                 return lastUserId;
             }catch(SQLException e1){
@@ -68,7 +63,7 @@ public class Main {
     }
 
 
-    public static ArrayList<String> getPaymentMethodsOfUser(int id) throws SQLException, IOException {
+    public ArrayList<String> getPaymentMethodsOfUser(int id) {
         ArrayList<String> paymentMethods=new ArrayList<>();
 
         try{
@@ -89,7 +84,7 @@ public class Main {
     }
 
 
-    public static boolean addRemovePaymentMethod(int id,String type,String cardNumber){
+    public boolean addRemovePaymentMethod(int id,String type,String cardNumber){
 
         boolean success=false;
 
@@ -129,7 +124,7 @@ public class Main {
     }
 
 
-    public static ArrayList<User> listAllUsers(){
+    public  ArrayList<User> listAllUsers(){
 
         ArrayList<User> users=new ArrayList<>();
         try{
@@ -158,12 +153,201 @@ public class Main {
         return users;
     }
     //USER bitiş
+    //Category başlangıç
 
+    public ArrayList<Category> getCategories() {
+        ArrayList<Category> category = new ArrayList<>();
+        try {
+            Statement stmt = DBConnection.getConnection().createStatement();
+            ResultSet rs = stmt.executeQuery("select * from category");
+            while (rs.next()) {
+                Category c = new Category(rs.getInt(1), rs.getString(2));
+                category.add(c);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return category;
+    }
+
+
+
+
+    /**
+     * Well named
+     *
+     * @param name name of the category
+     * @param type "add" or "remove", the type of the action
+     * @return id of the category processed. return -1 if the action fails.
+     */
+    public int addRemoveCategory(String name, String type) {
+
+        if (type.equals("add")) {
+            //does it exist?
+            for (Category cat : getCategories()) {
+                if (name.equals(cat.getName())) //yes, it already exists.
+                    return -1;
+            }
+            //it doesn't preexist, add it
+            try {
+                Statement stmt = DBConnection.getConnection().createStatement();
+                ResultSet rs = stmt.executeQuery("select max(id) from category");
+                int lastCategoryId = 0;
+                while (rs.next()) {
+                    lastCategoryId = rs.getInt(1);
+                }
+                lastCategoryId++;
+
+                stmt.executeUpdate("insert into category values(" + lastCategoryId + ",'" + name + "')");
+
+                return lastCategoryId;
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } else if (type.equals("remove")) {
+            //is it even there though?
+            for (Category cat : getCategories()) {
+                if (name.equals(cat.getName())) { //if it exists:
+                    try {
+                        Statement stmt = DBConnection.getConnection().createStatement();
+                        ResultSet rs = stmt.executeQuery("select id from category where cname='" + name + "'"); //store the delendum.id
+                        rs.next();
+                        int categoryId = rs.getInt(1);
+                        stmt.executeUpdate("delete from category where cname='" + name +"'"); //deletes the delendum
+
+                        return categoryId; //returns the id of the category
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        } else{
+            System.out.println("please have the action type as either \"remove\" or \"add\"!");
+            return -1;
+        }
+        return -1;
+    }
+
+    public boolean removeProduct(int id){
+        boolean s = false;
+
+        try{
+
+
+            Statement  stmt = DBConnection.getConnection().createStatement();
+            ResultSet rs = stmt.executeQuery("select id from product where id="+id);
+            if (rs.next()){//istenilen product mevcutsa tabloda
+
+                stmt.executeUpdate("delete from listing where product_id = "+id);//bu sanırım gereksiz ama şimdilik kalsın sağlam kafayla test edip ona göre sileriz
+                stmt.executeUpdate("delete from  product where id="+id);
+
+                s=true;
+            }
+
+
+
+
+        } catch ( SQLException e) {
+            e.printStackTrace();
+        }
+
+
+        return s;}
+
+    public int addProduct(String name,String description,int categoryId){//!!! category id ve category description da eklenmeli database güncellenmeli
+        try{
+            Statement stmt = DBConnection.getConnection().createStatement();
+            ResultSet rs = stmt.executeQuery("select max(id) from product");
+            int lastProductId = 0;
+
+            while (rs.next()){lastProductId = rs.getInt(1);}
+            lastProductId++;
+            try{
+                stmt.execute("insert into product values("+lastProductId+", '"+name+"',"+categoryId+")");
+                return lastProductId;
+            }catch(SQLException e1){e1.printStackTrace();}
+        }
+        catch (SQLException e ) {e.printStackTrace () ;}
+        return -1; //sth went wrong
+
+    }
+    public ArrayList<Product> listProducts(){
+        ArrayList<Product> products = new ArrayList<Product>();
+        try {
+            Statement stmt = DBConnection.getConnection().createStatement();
+            ResultSet rs = stmt.executeQuery("select * from product");
+            while(rs.next()){
+                products.add(new Product(rs.getInt(1), rs.getString(2)));
+            }
+        } catch (SQLException e){e.printStackTrace();}
+        return products;
+
+    }
+    //category bitiş
+    public int createListing(int productId,int sellerId,int price,int stock){
+        int lastUserId=-1;
+        try{
+            Statement stmt = DBConnection.getConnection().createStatement();
+
+
+            ResultSet rs1 = stmt.executeQuery("select listing_id from listing where seller_id = "+sellerId+" and product_id = "+productId);
+            if (rs1.next()){
+                int id= rs1.getInt(1);
+                stmt.executeUpdate("update listing set price = " +price+" where listing_id= "+id);
+                return id;
+            }
+            else{
+                ResultSet rs = stmt.executeQuery("select max(listing_id) from listing");
+                while ( rs.next () ) {
+                    lastUserId = rs.getInt (1) ;
+                }
+                lastUserId++;
+
+                stmt.executeUpdate("insert into listing values ("+lastUserId+", "+productId+" , "+sellerId+", "+stock+", "+price+" )");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return lastUserId;
+    }
+
+    public Listing getListing(int listingId){
+        Listing listing=null;
+        try{
+            Statement stmt = DBConnection.getConnection().createStatement();
+            ResultSet rs = stmt.executeQuery("select * from listing where listing_id= "+listingId);
+            while ( rs.next () ) {
+                int productId = rs.getInt (2) ;
+                int sellerId = rs.getInt (3) ;
+                int stock = rs.getInt (4) ;
+                int price = rs.getInt (5) ;
+                listing=new Listing(listingId,sellerId, productId,price,stock);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return listing;
+    }
+    public  ArrayList<Listing> getListingsOfSeller(int sellerId){
+        ArrayList<Listing> listings = new ArrayList<>();
+        try{
+            Statement stmt = DBConnection.getConnection().createStatement();
+            ResultSet rs = stmt.executeQuery("select * from listing where seller_id="+sellerId);
+
+            while(rs.next()){
+                listings.add(new Listing(rs.getInt(1),rs.getInt(3),rs.getInt(2), rs.getInt(5),rs.getInt(4)));
+            }
+        }
+        catch (SQLException e){e.printStackTrace();}
+        return listings;
+    }
 
 
 
     //Statictics başlangıç
-    public static ArrayList<User> listTopKSellers(int k){
+    public ArrayList<User> listTopKSellers(int k){
         ArrayList<User> topSellers=new ArrayList<>();
 
 
@@ -179,7 +363,7 @@ public class Main {
             while ( rs.next () && count<k) {
              User seller=new User (rs.getInt (1) ,rs.getString(3),"Seller",rs.getString(4)) ;
              topSellers.add(seller);
-
+             count++;
             }
 
 
@@ -190,7 +374,7 @@ public class Main {
         return topSellers;
     }
 
-    public static int numberOfOutOfStock(){
+    public int numberOfOutOfStock(){
         int stock=0;
         try{
             Statement stmt = DBConnection.getConnection().createStatement();
@@ -208,7 +392,7 @@ public class Main {
         return stock;
     }
 
-    public static ArrayList<CategoryStats> getAveragePricePerCategory(){
+    public ArrayList<CategoryStats> getAveragePricePerCategory(){
         ArrayList<CategoryStats> categoryStats=new ArrayList<>();
         try{
             Statement stmt = DBConnection.getConnection().createStatement();
@@ -237,7 +421,7 @@ public class Main {
      * @param k kaç tane kullanıcı verdiği
      * @return en fazla alım yapmış alıcılar
      */
-    public static ArrayList<User> topSpentK(int k){
+    public  ArrayList<User> topSpentK(int k){
         ArrayList<User> users = new ArrayList<>();
         try {
             Statement stmt = DBConnection.getConnection().createStatement();
@@ -250,7 +434,7 @@ public class Main {
         return users;
     }
 
-    public static Product topSellingProduct(){
+    public Product topSellingProduct(){
         try{
             Statement stmt = DBConnection.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery("select count(*), p.id, p.pname from listing l, orders o, product p where l.listing_id=o.listing_id and p.id=l.product_id group by product_id order by count(*) desc;");
@@ -263,7 +447,7 @@ public class Main {
         return null;
     }
 
-    public static ArrayList<Product> getKTopSellingProductofSeller(int k, int userId){
+    public ArrayList<Product> getKTopSellingProductofSeller(int k, int userId){
         ArrayList<Product> products = new ArrayList<>();
         try{
             Statement stmt = DBConnection.getConnection().createStatement();
@@ -277,7 +461,7 @@ public class Main {
         return products;
     }
 
-    public static ArrayList<Order> getOrdersOfUser(int userId){
+    public ArrayList<Order> getOrdersOfUser(int userId){
         ArrayList<Order> orders = new ArrayList<>();
         try{
             Statement stmt = DBConnection.getConnection().createStatement();
@@ -289,9 +473,10 @@ public class Main {
         return orders;
     }
 
-    public static boolean buy(int listingId, int userId){
+    public boolean buy(int listingId, int userId){
         try {
             Statement stmt = DBConnection.getConnection().createStatement();
+
             //if the stock in the listing is non-positive, return false:
             ResultSet rs = stmt.executeQuery("select stock,product_id from listing where listing_id="+listingId);
             if(rs.next()){
@@ -317,16 +502,14 @@ public class Main {
         catch (SQLException e){e.printStackTrace();}
         return false;
     }
-    public static void main (String[]args) throws SQLException, IOException {
 
-        //System.out.println(numberOfOutOfStock());
-        //for (CategoryStats c:getAveragePricePerCategory()){System.out.println(c.categoryId+", "+c.averagePrice);}
+    public Main() throws SQLException {
 
-        System.out.println(buy(6,246));
-        int orderId=10;
-        int listingId=84;
-        int userId = 15;
-        int stock = 10;
-        //System.out.println("update listing set stock="+(stock-1)+" where listing_id="+listingId);
+    }
+    public static void main (String[]args) throws SQLException {
+
+
+
+
     }
 }

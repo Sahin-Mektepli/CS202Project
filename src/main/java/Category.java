@@ -23,7 +23,7 @@ public class Category {
     }
 
 
-    public static ArrayList<Category> getCategories() {
+    /*public static ArrayList<Category> getCategories() {
         ArrayList<Category> category = new ArrayList<>();
         try {
             Statement stmt = DBConnection.getConnection().createStatement();
@@ -38,13 +38,7 @@ public class Category {
         return category;
     }
 
-    private static boolean categoryDoesntPreexist(Category category) {
-        for (Category cat : getCategories()) {
-            if (category.getName().equals(cat.getName()))
-                return false;
-        }
-        return true;
-    }
+
 
 
     /**
@@ -54,7 +48,7 @@ public class Category {
      * @param type "add" or "remove", the type of the action
      * @return id of the category processed. return -1 if the action fails.
      */
-    public static int addRemoveCategory(String name, String type) {
+   /* public static int addRemoveCategory(String name, String type) {
 
         if (type.equals("add")) {
             //does it exist?
@@ -101,7 +95,7 @@ public class Category {
         }
         return -1;
     }
-
+*/
 
 }
 
